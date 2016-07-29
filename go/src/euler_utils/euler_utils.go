@@ -2,6 +2,7 @@ package euler_utils
 
 import (
   "math"
+  "sort"
 )
 
 // sends an integer to a channel, provided it passes the filter function
@@ -84,4 +85,12 @@ func GenerateDivisors(number int) []int {
     }
   }
   return result
+}
+
+/** Generate the proper divisors of a number (all the divisors less the number itself)
+*/
+func GenerateProperDivisors(number int) []int {
+  allDivisors := GenerateDivisors(number)
+  sort.Ints(allDivisors)
+  return allDivisors[:len(allDivisors) - 1]
 }

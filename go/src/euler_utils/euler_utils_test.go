@@ -92,6 +92,10 @@ func TestGenerateDivisors(test *testing.T) {
   failOnTest(reflect.DeepEqual(GenerateDivisors(12), []int{1,12,2,6,3,4}), "Wrong divisors for 12", test)
 }
 
+func TestGenerateProperDivisors(test *testing.T) {
+  failOnTest(reflect.DeepEqual(GenerateProperDivisors(9), []int{1,3}), "9s proper divisors should be 1,3", test)
+}
+
 
 func failOnTest(testResult bool, message string, test *testing.T) {
   if (!testResult) {
