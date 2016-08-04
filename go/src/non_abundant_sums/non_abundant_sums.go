@@ -12,6 +12,7 @@ Find the sum of all the positive integers which cannot be written as the sum of 
 
 import (
   "euler_utils"
+  "fmt"
 )
 
 const (
@@ -23,20 +24,56 @@ const (
 const UPPER_LIMIT = 28123
 
 func main() {
-  numbers: = make([]int, UPPER_LIMIT)
+  numbers := catalogNumbers(UPPER_LIMIT)
+  channel := make(chan int)
+  go findNoAbundantSumNumbers(numbers, channel)
 
-  for number := 0; number < UPPER_LIMIT; number++ {
+  fmt.Println(euler_utils.SumChannelValues(channel))
+}
+
+/** Make a slice where each item is a const telling you if the number at that index (-1)
+    is abundant, deficient, or perfect
+    */
+func catalogNumbers(upTo int) []int {
+  numbers := make([]int, upTo)
+
+  for number := 1; number <= upTo; number++ {
     divisorSum := euler_utils.SumOfSliceValues(euler_utils.GenerateProperDivisors(number))
 
     switch {
     case divisorSum < number:
       numbers[number - 1] = DEFICIENT
     case divisorSum > number:
-      numbers[number-1] = ABUNDANT
+      numbers[number - 1] = ABUNDANT
     case divisorSum == number:
-      numbers[number - 1] == PERFECT
+      numbers[number - 1] = PERFECT
     }
   }
 
-  
+  return numbers
+}
+
+
+/** Find all the numbers that can not be written as sums of abundant numbers, and
+ *  send them along the channel for processing.
+ */
+func findNoAbundantSumNumbers(numberTypes []int, channel chan int) {
+  for currentNumber := 3; currentNumber <= UPPER_LIMIT; currentNumber++ {
+
+    euler_utils.SendValueToChannel(currentNumber, channel, func (number int) bool {
+      return !canBeMadeWithTwoAbundants(currentNumber, numberTypes)
+    })
+  }
+  close(channel)
+}
+
+/** Determine if the given number can be made out of two abundant numbers. */
+func canBeMadeWithTwoAbundants(number int, numberTypes []int) bool {
+  for currentSubtraction := 2; currentSubtraction < number; currentSubtraction++ {
+    if numberTypes[currentSubtraction - 1 ] == ABUNDANT &&
+       numberTypes[number - currentSubtraction - 1] == ABUNDANT {
+       return true
+     }
+  }
+  return false
 }
