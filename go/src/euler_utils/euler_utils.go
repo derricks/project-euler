@@ -52,13 +52,13 @@ func IsEven(number int) bool {
 
 /** Return the sum of the values in the slice.
  */
- func SumOfSliceValues(slice []int) int {
-   result := 0
-   for _,value := range slice {
-     result += value
-   }
-   return result
- }
+func SumOfSliceValues(slice []int) int {
+  result := 0
+  for _,value := range slice {
+    result += value
+  }
+  return result
+}
 
 
 /** Generate a slice representing all the unique divisors of a number (not in order)
@@ -93,4 +93,18 @@ func GenerateProperDivisors(number int) []int {
   allDivisors := GenerateDivisors(number)
   sort.Ints(allDivisors)
   return allDivisors[:len(allDivisors) - 1]
+}
+
+/** Converts an uppercase string to indices of letters in the alphabet.
+    For instance, HELLO becomes {8,5,12,12,15}
+  */
+func StringToAlphabetIndices(letters string) []int {
+  numbers := make([]int, 0, len(letters))
+
+  for index := 0; index < len(letters); index++ {
+    letter := letters[index]
+    number := letter - 64
+    numbers = append(numbers, int(number))
+  }
+  return numbers
 }
